@@ -8,6 +8,7 @@ import calendar # Necesario para monthrange en reportes mensuales
 import pytz
 # app.py (al principio del archivo)
 from itertools import groupby
+from flask_migrate import Migrate
 
 TARGET_TIMEZONE = pytz.timezone('America/Mexico_City')
 
@@ -72,6 +73,7 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message = "Por favor, inicia sesión para acceder a esta página."
@@ -1190,3 +1192,21 @@ if __name__ == '__main__':
         inicializar_bd()
     else:
         app.run(debug=True, host='0.0.0.0', port=5000)
+
+
+
+# Asegúrate de que esta función esté en tu app.py
+@app.route('/inicializar-base-de-datos/mi-codigo-secreto-123')
+def inicializar_bd_remota():
+    try:
+        db.create_all()
+        if not Barbero.query.filter_by(nombre_usuario='admin').first():
+            admin = Barbero(nombre_usuario='admin', nombre_completo='Administrador Principal', rol='admin')
+            admin.set_password('admin123')
+            db.session.add(admin)
+            db.session.commit()
+            return "<h1>¡ÉXITO!</h1><p>Base de datos y usuario admin creados correctamente.</p>"
+        else:
+            return "<h1>AVISO</h1><p>La base de datos ya parece estar inicializada.</p>"
+    except Exception as e:
+        return f"<h1>Ocurrió un error:</h1><p>{str(e)}</p>"
