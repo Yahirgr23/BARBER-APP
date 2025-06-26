@@ -233,8 +233,7 @@ def get_start_date_for_open_day():
         check_date -= timedelta(days=1)
         
     return check_date + timedelta(days=1)
-def load_user(user_id):
-    return Barbero.query.get(int(user_id))
+
 
 # --- Decorador para roles ---
 def admin_required(f):
