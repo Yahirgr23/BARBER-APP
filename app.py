@@ -8,7 +8,7 @@ import calendar # Necesario para monthrange en reportes mensuales
 import pytz
 # app.py (al principio del archivo)
 from itertools import groupby
-from flask_migrate import Migrate
+
 
 TARGET_TIMEZONE = pytz.timezone('America/Mexico_City')
 
@@ -73,7 +73,7 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message = "Por favor, inicia sesión para acceder a esta página."
